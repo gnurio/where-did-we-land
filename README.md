@@ -1,4 +1,4 @@
-# where-did-we-land
+# Where Did We Land?
 
 Turns a meeting transcript into one self-contained HTML file: topic timeline, a ledger of where every
 thread landed with the quote that proves it, open loops, commitments, stances, and airtime.
@@ -27,7 +27,7 @@ git clone https://github.com/gnurio/where-did-we-land.git \
 
 ## Getting a transcript in
 
-Run it with no argument and it goes looking. Pasting is the last resort, not the first move.
+Run it with no argument and it goes looking. 
 
 | # | Rung | Needs |
 |---|---|---|
@@ -35,15 +35,15 @@ Run it with no argument and it goes looking. Pasting is the last resort, not the
 | 2 | **Local disk sweep** — `~/Downloads`, `~/Documents/Zoom`, a synced `Meet Recordings/`, recognising Zoom's `GMT…transcript.vtt` and Teams' `.vtt` alongside its `.docx` | filesystem |
 | 3 | **A share link** — Otter, Fathom, Grain, tl;dv pages are usually public and fetchable | web fetch |
 | 4 | **MCP adapters** — Granola meetings, Google Drive for Meet transcript Docs, Gmail for notetaker recap emails | that MCP |
-| 5 | **Ask** — naming what it already checked | — |
+| 5 | **Ask** — labels what it already checked | — |
 
-`reference/sources.md` holds the filename patterns, which links are auth-walled (Zoom share links and
+`reference/sources.md` contains the filename patterns, which links require authentication (Zoom share links and
 SharePoint are — ask for the `.vtt`), and the exact MCP searches.
 
 ### Formats it accepts
 
-Every meeting tool exports one of five shapes, so five parsers cover the market. `reference/formats.md`
-holds the detection and normalisation rules.
+All the meeting tools use one of five shapes. `reference/formats.md`
+contains the detection and normalisation rules.
 
 | Shape | Looks like | From |
 |---|---|---|
@@ -53,10 +53,9 @@ holds the detection and normalisation rules.
 | Inline label | `[00:05:32] Alice: …` or `**Sarah (00:00):** …` | Granola exporters, Fireflies MD, tl;dv, Krisp |
 | JSON | `{"speaker":…,"text":…,"start_time":…}` | Granola, Fathom, Circleback, Fireflies, Read.ai APIs |
 
-**The one that bites:** VTT, SRT and per-utterance JSON emit a cue every few seconds, so a single
-400-word monologue arrives as forty entries. They must be merged back into turns first or the turn
-count inflates 10–20× and the airtime chart becomes meaningless. The skill checks its own work: a
-20-minute two-person conversation should land around 40–120 turns.
+**Caveat:** VTT, SRT and per-utterance JSON files create a cue every few seconds. This means a 400-word monologue can be sent as forty separate entries.
+You must merge these entries into turns first. Otherwise, the turn count will increase 10 to 20 times. This will make the airtime chart inaccurate.
+The system self-verifies. A 20-minute conversation between two people should have about 40 to 120 turns.
 
 **Rejected outright:** Teams plain-text via Graph (strips speaker attribution entirely — ask for the
 `.vtt`), Granola "Copy Notes" (copies the summary, not the transcript), Supernormal imported
@@ -64,10 +63,7 @@ recordings (monologue-formatted, no speaker separation).
 
 ### The single-speaker check
 
-Roughly two-thirds of a typical Granola library is solo voice notes, not conversations. Those have no
-stances, no agreements and no open loops between people, so the skill stops and offers a summary
-instead of rendering a page that implies a meeting happened. This matters most when running
-unattended.
+Solo voice notes have no stances, agreements, or open loops between people. The skill stops and offers a summary instead of rendering a page that implies a meeting happened. This is most important when running unattended.
 
 ## Running it automatically
 
@@ -81,18 +77,14 @@ polls for new meetings:
   Skip single-speaker voice notes silently. Report only the file paths."
 ```
 
-Expect it to skip most days. On a typical month it fires on 2–4 meetings — work 1:1s, workshops, and
-messy multi-party calls. That is the honest hit rate; the value is that the ones it catches are the
-ones you would otherwise never reconstruct.
+## Other notes
 
-## What the page keeps, and what it throws away
-
-The generated file holds **word counts, not words**. `turns` carries
+The generated file retains **word counts, not words**. `turns` carries
 `[speaker, seconds, wordCount]`, so the charts and talk share are exact while the transcript itself
 never leaves your machine. The only verbatim text on the page is the handful of quotes chosen as
 receipts — typically a dozen or two lines out of several thousand words.
 
-Share the ledger and you share those quotes. You do not share the meeting.
+This matters if you wish to share the generated artifact with others.
 
 ## Files
 
@@ -127,8 +119,3 @@ All text colours are checked against the 4.5:1 floor on white. If you swap the p
 the design-system muted grey `#868A97` measures 3.44:1 and fails, which is why the text step is
 `#626673`.
 
-## What it will not do
-
-Infer a state it cannot quote. Where the transcript is genuinely unclear the page says
-`No explicit answer` rather than guessing a decision — which is the entire point of the evidence
-column.
