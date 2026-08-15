@@ -1,6 +1,6 @@
 ---
 name: where-did-we-land
-description: Reconstruct a meeting or workshop transcript into a single self-contained HTML page: every thread, where it landed, what was left open, who committed to what, and who held the floor. Use when the user points at a transcript (Otter, Granola, Zoom, Teams, Fathom, raw notes) and asks where they landed, what was decided, what is still open, how the conversation went, or asks to visualise or reconstruct a conversation.
+description: "Reconstruct a meeting or workshop transcript into a single self-contained HTML page: every thread, where it landed, what was left open, who committed to what, and who held the floor. Use when the user points at a transcript (Otter, Granola, Zoom, Teams, Fathom, raw notes) and asks where they landed, what was decided, what is still open, how the conversation went, or asks to visualise or reconstruct a conversation."
 ---
 
 Address the underlying question: **where did we land, and what did we leave open?**
