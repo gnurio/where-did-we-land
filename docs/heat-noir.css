@@ -6,7 +6,11 @@
    Tokens are lifted from the Heat Noir design system: warm near-black fields,
    warm off-white type, Cinzel for display, Archivo Narrow for meta labels,
    hard edges, hairline rules, no gradients, no shadows. At most two accents
-   in play — gold is Hanna, teal is McCauley.
+   in play — gold is Hanna, neon blue is McCauley.
+
+   The punched-up values (`--red-bright`, `--neon-blue-bright`) are the system's
+   key-moment accents and never carry body text. The base blue does the chart
+   work; the electric one is held back for a state that has genuinely failed.
 
    Almost all of it lands by redefining the template's own custom properties,
    which is why the charts recolour without a line of JavaScript changing.  */
@@ -26,8 +30,8 @@
 
   --indigo:#C6A06A;       /* speaker 0 — Hanna */
   --indigo-deep:#E0C08C;
-  --ink-dark:#6FA6AC;     /* speaker 1 — McCauley */
-  --teal:#6FA6AC;
+  --ink-dark:#0E8FC9;     /* speaker 1 — McCauley */
+  --teal:#0E8FC9;
   --teal-text:#F4EFE2;    /* a landed thread reads bright, an open one dim */
 
   --display:'Cinzel','Times New Roman',serif;
@@ -35,7 +39,15 @@
   --meta:'Archivo Narrow','Inter',sans-serif;
 
   --gold:#C6A06A;
+  --neon-blue-bright:#22D3FF;
+  --red-bright:#FF4433;
 }
+
+/* A dropped or unanswered thread is the one genuinely bad state on this page,
+   so it gets the punched-up red — the template reaches for --ink here, which
+   the skin has already spent on body text. Heat has none; a future page might. */
+.tg.bad{color:var(--red-bright)}
+.f-bad{fill:var(--red-bright)}
 
 /* the poster's fields are flat and hard-edged — no soft wash */
 .hero::before{display:none}
