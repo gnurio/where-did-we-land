@@ -3,14 +3,12 @@ name: where-did-we-land
 description: Reconstruct a meeting or workshop transcript into a single self-contained HTML page: every thread, where it landed, what was left open, who committed to what, and who held the floor. Use when the user points at a transcript (Otter, Granola, Zoom, Teams, Fathom, raw notes) and asks where they landed, what was decided, what is still open, how the conversation went, or asks to visualise or reconstruct a conversation.
 ---
 
-Answer the question the room is actually asking: **where did we land, and what did we leave open?**
+Address the underlying question: **where did we land, and what did we leave open?**
 
-A transcript is a log. What you build from it is a **ledger**: every thread, where it ended, and the line of dialogue that proves it.
+Here are two kinds of claims that appear on the page:
 
-Two kinds of claim live on the page and they never mix.
-
-- **Counts are measured.** Turns, timings and word counts come from the transcript verbatim.
-- **States are inferred.** Every state carries a **receipt**, the quote it was read from. A state without a receipt does not ship.
+- **Measured Counts:** These are taken directly from the transcript, including turns, timings, and word counts.
+- **Inferred States:** Each inferred state carries a **receipt**, the quote from the transcript it was read from. A state without a receipt does not ship.
 
 Output is a plain `.html` file written to disk. No publishing step, no hosting, no server. The only capability this needs is reading and writing a file, so it runs identically in Claude Code, Cursor, Cowork and Codex.
 
@@ -18,11 +16,11 @@ Output is a plain `.html` file written to disk. No publishing step, no hosting, 
 
 ### 0. Get the transcript, and check it is a conversation
 
-**Go and find it.** Asking the user to paste is the last rung, not the first. A path, a share link, a download sitting in `~/Downloads`, or an MCP the session already has will usually get there without them lifting a finger.
+**Go and find it.** The user should only be asked to paste if there's no other way to get the information. Typically, the system can get the information through a path, a share link, a download in the user's Downloads folder, or an MCP the session already has.
 
-Work down the ladder in **`reference/sources.md`**: explicit input → local disk sweep → fetch a link → MCP adapters (Granola, Google Drive for Meet, Gmail for notetaker recaps) → ask. That file carries the filename patterns each tool writes, which share links are fetchable and which are auth-walled, and the exact searches for each MCP.
+Work down the ladder in `reference/sources.md`: explicit input → local disk sweep → fetch a link → MCP adapters (Granola, Google Drive for Meet, Gmail for notetaker recaps) → ask. That file carries the filename patterns each tool writes, which share links are fetchable and which are auth-walled, and the exact searches for each MCP.
 
-Then check the precondition: **two or more speakers who actually take turns.** A solo dictation has no stances, no agreements and no open loops between people. The page would render hollow and imply a conversation happened. Say so plainly and offer a summary instead.
+Before starting, check if there are at least two people speaking and taking turns. A recording with only one person speaking doesn't have different viewpoints, agreements, or unresolved topics between people. This would make the transcript seem empty and suggest a conversation occurred when it didn't. State this directly and provide a summary of what was said.
 
 **Done when** you hold transcript text with at least two speakers alternating, or you stopped and told the user why. Name the rungs you already tried.
 
@@ -30,7 +28,7 @@ Then check the precondition: **two or more speakers who actually take turns.** A
 
 Emit one entry per speaker turn: `[speakerIndex, secondsFromStart, wordCount]`.
 
-**The transcript itself never enters the page.** Only word counts do, so the charts and talk share stay exact while the meeting stays on the user's machine. The sole verbatim text that ships is the receipts chosen in step 3.
+The transcript stays on the user's machine. Only word counts reach the page, so the charts and talk share stay exact. The only verbatim text on the page is the receipts selected in step 3.
 
 Counting: where a shell is available, count exactly rather than by eye:
 
@@ -40,7 +38,7 @@ awk '{n+=NF} END {print n}' <<< "$turn_text"
 
 Where no shell exists (Cowork), count each turn by hand. Turns average around 70 words so per-turn error stays small, and the method belongs in `caveats`.
 
-Every tool on the market exports one of five shapes: speaker-header block, WebVTT, SRT, inline label, or JSON. **Read `reference/formats.md`** for how to recognise each one, what to do with the labels each tool emits, and which exports to reject outright.
+Every tool on the market exports one of five shapes: speaker-header block, WebVTT, SRT, inline label, or JSON. **Read** `reference/formats.md` for how to recognise each one, what to do with the labels each tool emits, and which exports to reject outright.
 
 The trap it exists to prevent: **cue-based formats (VTT, SRT) and per-utterance JSON are not turns.** One monologue arrives as forty cues. Merge consecutive entries by the same speaker before going further, or every count on the page is wrong by an order of magnitude.
 
@@ -62,21 +60,21 @@ Mark small talk, agenda-setting and sign-off as `substantive: false`; they stay 
 
 ### 3. State each thread, with its receipt
 
-| state | what it means |
-|---|---|
-| `decided` | a choice was made and said out loud |
-| `agreed` | one party's position was taken up by the other |
-| `action` | a named person owns a next step |
-| `closed` | a social or admin thread that ran its course |
-| `open` | live, and explicitly unresolved |
-| `partial` | direction set, specifics missing |
-| `ambiguous` | addressed sideways; the question itself never got answered |
-| `unanswered` | raised out loud, no response |
-| `dropped` | died mid-thread on a topic switch |
+| state        | what it means                                              |
+| ------------ | ---------------------------------------------------------- |
+| `decided`    | a choice was made and said out loud                        |
+| `agreed`     | one party's position was taken up by the other             |
+| `action`     | a named person owns a next step                            |
+| `closed`     | a social or admin thread that ran its course               |
+| `open`       | live, and explicitly unresolved                            |
+| `partial`    | direction set, specifics missing                           |
+| `ambiguous`  | addressed sideways; the question itself never got answered |
+| `unanswered` | raised out loud, no response                               |
+| `dropped`    | died mid-thread on a topic switch                          |
 
 Pick the state, then copy the quote that shows it, **verbatim**, character for character.
 
-Real speech is full of false starts and repetition: *"I've got a bunch of I think low-level updates"*, *"for the first the tasks improvement stuff"*. Tidying those is the easiest mistake to make and it quietly misrepresents what was said. Keep the disfluencies. Where a quote is too long, cut with an explicit `…` rather than smoothing over the join. `scripts/check_ledger.py` treats each side of an ellipsis as its own fragment and looks for both in the source.
+Real speech is full of false starts and repetition: _"I've got a bunch of I think low-level updates"_, _"for the first the tasks improvement stuff"_. Tidying those is the easiest mistake to make and it quietly misrepresents what was said. Keep the disfluencies. Where a quote is too long, cut with an explicit `…` rather than smoothing over the join. `scripts/check_ledger.py` treats each side of an ellipsis as its own fragment and looks for both in the source.
 
 Where the transcript will not support a firmer state, `ambiguous` is the honest answer and the page displays it.
 
@@ -93,9 +91,9 @@ Where the transcript will not support a firmer state, `ambiguous` is the honest 
 
 ### 5. Write the news
 
-The stat band carries the score: duration, threads landed, talk share, turns, commitments, open loops. All of it is on screen before the reader reaches a word of prose. The prose carries the **news**: what someone who read every row knows and the tiles cannot show.
+The stat band carries the score: duration, threads landed, talk share, turns, commitments, and open loops. All of it is on screen before the reader reaches a word of prose. The prose carries the **news**: what someone who read every row knows and the score alone cannot show.
 
-News comes from reading *across* rows rather than off any single one:
+News comes from reading _across_ rows rather than off any single one:
 
 - a subject raised, abandoned and raised again, and whether it ever closed
 - which kind of subject lands, and which kind stays open
@@ -105,19 +103,19 @@ News comes from reading *across* rows rather than off any single one:
 
 Give each sentence a **receipt** of its own: the rows you read it from. A sentence you cannot point at rows for is an impression, and impressions do not ship. The same bar applies to the states.
 
-**Report what this conversation did.** *"Neither man closes a thread he returns to"* is a finding, checkable against the table in ten seconds. *"The most evenly balanced conversation you are likely to watch"* ranks every conversation ever held on the strength of one measurement.
+**Report what this conversation did.** _"Neither man closes a thread he returns to"_ is a finding, checkable against the table in ten seconds. _"The most evenly balanced conversation you are likely to watch"_ ranks every conversation ever held on the strength of one measurement.
 
 **Let numbers earn their place.** A number the tiles already display costs a second reading and returns nothing. Numbers the tiles cannot compute are news: how many threads came back, how many of those closed, how many commitments sit with one person.
 
 Where the prose goes:
 
-| field | carries |
-|---|---|
-| `meta.headline` | the news, three sentences at most |
-| `notes.*` | one line per section: what the reader is looking at, then what it shows *here* |
-| `commitmentsNote` / `openLoopsNote` | one line each, under the stat band |
+| field                               | carries                                                                        |
+| ----------------------------------- | ------------------------------------------------------------------------------ |
+| `meta.headline`                     | the news, three sentences at most                                              |
+| `notes.*`                           | one line per section: what the reader is looking at, then what it shows _here_ |
+| `commitmentsNote` / `openLoopsNote` | one line each, under the stat band                                             |
 
-Recount every quantity as you write it. *"It happens twice here"* is wrong the moment a third thread has two segments. On a page whose whole claim is measurement, a wrong count costs more than a dull sentence would.
+Recount every quantity as you write it. _"It happens twice here"_ is wrong the moment a third thread has two segments. On a page whose whole claim is measurement, a wrong count costs more than a dull sentence would.
 
 **Done when** every sentence in `headline` and `notes` names rows you can point at, and you recounted every quantity in them against the JSON. No number in `headline` repeats one the stat band already shows.
 
@@ -175,4 +173,4 @@ Abbreviated, to fix the shape:
 
 ### 7. Report
 
-Give the user the file path, then lead with the number that answers *where did we land*, then the open loops. The ledger is already on the page. Do not restate it in chat.
+Give the user the file path, then lead with the number that answers _where did we land_, then the open loops. The ledger is already on the page. Do not restate it in chat.

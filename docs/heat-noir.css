@@ -98,3 +98,11 @@ footer{color:var(--muted)}
   font:400 14px/1.65 var(--text);color:var(--ink2);
 }
 .filmstrip .cap a{color:var(--gold)}
+
+/* One thread in this scene is `decided` rather than `agreed`: the only thing
+   the two men settle. Gold is the system's primary emphasis, and a single
+   strong mark is what it is for, so that one row gets it and the rest stay
+   bright-on-dim. The template ships every state's name as a class for exactly
+   this; a page with no `decided` thread looks unchanged. */
+.tg.s-decided{color:var(--gold)}
+.f-s-decided{fill:var(--gold)}

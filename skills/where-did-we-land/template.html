@@ -259,7 +259,7 @@ footer{margin-top:76px;padding:22px 0 64px;border-top:1px solid var(--line);
     d.tabIndex = 0; d.setAttribute('role','region'); d.setAttribute('aria-label', label);
     return d;
   }
-  // cells: string | {cls,text} | {q,attr} | {tag:{label,tone,glyph}}
+  // cells: string | {cls,text} | {q,attr} | {tag:{label,tone,glyph,state}}
   function table(parent, label, cols, rows){
     var box = scroller('tbl', parent, label);
     var t = el('table', null, null, box);
@@ -275,7 +275,10 @@ footer{margin-top:76px;padding:22px 0 64px;border-top:1px solid var(--line);
           el('q', null, c.q, td);
           if (c.attr) el('span','attr', c.attr, td);
         } else if (c.tag){
-          var sp = el('span', 'tg ' + c.tag.tone, null, td);
+          /* tone drives the colour; the state name rides along so a skin can
+             single out one state — a lone `decided` reads differently to three
+             `agreed` — without the default page changing at all */
+          var sp = el('span', 'tg ' + c.tag.tone + ' s-' + c.tag.state, null, td);
           el('span','dot', c.tag.glyph, sp);
           sp.appendChild(document.createTextNode(c.tag.label));
         } else {
@@ -352,7 +355,7 @@ footer{margin-top:76px;padding:22px 0 64px;border-top:1px solid var(--line);
         tp.label + ' — ' + mmss(s[0]) + '–' + mmss(s[1]) + ', ' + P[s[2]].name;
     });
     var stt = st_of(tp.state);
-    var g = sv('text', {'class':'tag f-'+stt[1], x:LBL+PLOT+18, y:y+BAR+1}, s1);
+    var g = sv('text', {'class':'tag f-'+stt[1]+' f-s-'+tp.state, x:LBL+PLOT+18, y:y+BAR+1}, s1);
     g.textContent = stt[2] + '  ' + stt[0];
   });
   sv('line', {'class':'axis', x1:LBL, x2:LBL+PLOT,
@@ -366,7 +369,7 @@ footer{margin-top:76px;padding:22px 0 64px;border-top:1px solid var(--line);
       {cls:'rid',  text:'T'+pad2(i+1)},
       {cls:'tnum', text:mmss(tp.segs[0][0])},
       {cls:'hd',   text:tp.label},
-      {tag:{label:stt[0], tone:stt[1], glyph:stt[2]}},
+      {tag:{label:stt[0], tone:stt[1], glyph:stt[2], state:tp.state}},
       {q:tp.quote, attr:tp.who + ', ' + tp.ts}
     ];
   }));

@@ -1,0 +1,9 @@
+# The skill folder ships to other people's agents. Prettier rewrites it in ways
+# that break it: it reads the YAML frontmatter's closing `---` as a setext
+# heading and deletes it, which makes the skill unloadable, and it explodes the
+# compact JSON example that exists to show the shape in as little context as
+# possible.
+skills/
+
+# Generated output.
+docs/heat.html

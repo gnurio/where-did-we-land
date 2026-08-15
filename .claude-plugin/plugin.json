@@ -1,7 +1,7 @@
 {
   "name": "where-did-we-land",
-  "version": "0.1.0",
-  "description": "Reconstruct a meeting or workshop transcript into one self-contained HTML page — every thread, where it landed, what was left open, who committed to what, and who held the floor. Counts are measured, states are inferred, and every state carries the verbatim quote it was read from.",
+  "version": "0.2.0",
+  "description": "Reconstruct a meeting or workshop transcript into one self-contained HTML page: every thread, where it landed, what was left open, who committed to what, and who held the floor. Counts are measured, states are inferred, and every state carries the verbatim quote it was read from.",
   "author": {
     "name": "George Nurijanian",
     "url": "https://github.com/gnurio"
