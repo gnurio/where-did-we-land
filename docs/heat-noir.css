@@ -1,0 +1,88 @@
+/* ── Heat Noir ────────────────────────────────────────────────────────────
+   A skin for the hosted Heat example only. Inlined into docs/heat.html at
+   build time; the skill's template.html is untouched and every other ledger
+   still renders light.
+
+   Tokens are lifted from the Heat Noir design system: warm near-black fields,
+   warm off-white type, Cinzel for display, Archivo Narrow for meta labels,
+   hard edges, hairline rules, no gradients, no shadows. At most two accents
+   in play — gold is Hanna, teal is McCauley.
+
+   Almost all of it lands by redefining the template's own custom properties,
+   which is why the charts recolour without a line of JavaScript changing.  */
+
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Archivo+Narrow:wght@400;500;600&display=swap');
+
+:root{
+  --bg:#0d0c09;
+  --tint:#16140f;
+  --panel:#201d16;
+
+  --ink:#F4EFE2;          /* warm off-white, never pure white */
+  --ink2:#CDC6B4;
+  --muted:#8A8375;
+  --muted-mark:#7A6543;
+  --line:rgba(244,239,226,.14);
+
+  --indigo:#C6A06A;       /* speaker 0 — Hanna */
+  --indigo-deep:#E0C08C;
+  --ink-dark:#6FA6AC;     /* speaker 1 — McCauley */
+  --teal:#6FA6AC;
+  --teal-text:#F4EFE2;    /* a landed thread reads bright, an open one dim */
+
+  --display:'Cinzel','Times New Roman',serif;
+  --text:'Inter',-apple-system,'Helvetica Neue',Arial,sans-serif;
+  --meta:'Archivo Narrow','Inter',sans-serif;
+
+  --gold:#C6A06A;
+}
+
+/* the poster's fields are flat and hard-edged — no soft wash */
+.hero::before{display:none}
+
+/* Cinzel is an engraved serif: it needs tracking out, not in */
+h1{
+  color:var(--gold);
+  letter-spacing:.045em;
+  font-weight:500;
+  max-width:20ch;
+}
+h2{letter-spacing:.035em;font-weight:500}
+.stat .v{letter-spacing:.02em;font-weight:500}
+
+/* caps + wide tracking marks something as a credit, never as prose */
+.eyebrow,th,.attr,.rid,.rowid{
+  font-family:var(--meta);
+  text-transform:uppercase;
+  letter-spacing:.16em;
+}
+.eyebrow{font-size:13px}
+.attr{font-size:12px;letter-spacing:.14em}
+th{letter-spacing:.2em}
+
+.eyebrow a{color:var(--gold);text-decoration-color:var(--muted-mark)}
+.eyebrow a:hover{color:var(--indigo-deep);text-decoration-color:currentColor}
+
+/* the receipt is the whole claim of the page; set it like the poster's own line */
+q{font-family:var(--display);font-size:17px;line-height:1.5;color:var(--ink)}
+
+/* near-zero radius throughout; the avatars stay round on purpose */
+.share,.key i{border-radius:0}
+.av{filter:saturate(.55) contrast(1.05)}
+
+/* SVG text inherits none of the above — restate it */
+.rowid,.tick{font-family:var(--meta);letter-spacing:.14em}
+
+footer{color:var(--muted)}
+.sitenav a{color:var(--gold) !important}
+
+/* ── the clip, embedded ─────────────────────────────────────────────── */
+.filmstrip{margin-top:28px;border-top:1px solid var(--line);padding-top:36px}
+.filmstrip video{
+  display:block;width:100%;max-width:960px;height:auto;background:#08070a;
+}
+.filmstrip .cap{
+  margin:16px 0 0;max-width:74ch;
+  font:400 14px/1.65 var(--text);color:var(--ink2);
+}
+.filmstrip .cap a{color:var(--gold)}

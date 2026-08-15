@@ -290,14 +290,19 @@ footer{margin-top:76px;padding:22px 0 64px;border-top:1px solid var(--line);
   var eb = el('div','eyebrow', null, hero);
   el('span', null, D.meta.kind || 'Conversation record', eb);
   el('span', null, mmss(T0) + '–' + mmss(T1) + ', ' + Math.round(SPAN/60) + ' minutes', eb);
-  /* meta.sourceUrl is optional: when the transcript came from a public page, cite it. */
-  var srcSpan = el('span', null, null, eb);
-  if (D.meta.sourceUrl && /^https?:\/\//.test(D.meta.sourceUrl)){
-    var sa = el('a', null, D.meta.source || D.meta.sourceUrl, srcSpan);
-    sa.href = D.meta.sourceUrl; sa.rel = 'noopener noreferrer'; sa.target = '_blank';
-  } else {
-    srcSpan.textContent = D.meta.source || '';
+  /* meta.sourceUrl / meta.clipUrl are optional: when the transcript or the
+     recording came from a public page, cite it rather than describe it. */
+  function cite(text, url){
+    var sp = el('span', null, null, eb);
+    if (url && /^https?:\/\//.test(url)){
+      var a = el('a', null, text || url, sp);
+      a.href = url; a.rel = 'noopener noreferrer'; a.target = '_blank';
+    } else {
+      sp.textContent = text || '';
+    }
   }
+  cite(D.meta.source, D.meta.sourceUrl);
+  if (D.meta.clipUrl) cite(D.meta.clipLabel || 'Watch the clip', D.meta.clipUrl);
   el('h1', null, D.meta.title, hero);
   el('p','lede-hero', D.meta.headline, hero);
   var key = el('div','key', null, hero);

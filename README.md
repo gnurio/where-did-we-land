@@ -18,7 +18,11 @@ double-clicking, mail it, drop it in a repo. The only capability the skill needs
 A live page, unedited output: **[the diner scene from Heat
 (1995)](https://gnurio.github.io/where-did-we-land/heat.html)**. Two men who intend to kill each
 other split the airtime 55/45 across thirteen turns each and settle four threads out of eight — the
-best-balanced and least conclusive conversation you will ever watch.
+best-balanced and least conclusive conversation you will ever watch. At the foot of that page is a
+seventy-four-second video of the scene playing with the ledger assembling beside it.
+
+That page is skinned in a noir palette taken from the film's posters, which is a per-page
+override — every other ledger the skill writes still comes out light.
 
 ## Install
 

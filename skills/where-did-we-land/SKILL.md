@@ -98,7 +98,9 @@ Copy `template.html`, replace the whole `<script type="application/json" id="con
 Schema:
 
 ```
-meta          { title, kind, source, sourceUrl?, start, end, headline }   start/end in seconds
+meta          { title, kind, source, sourceUrl?, clipUrl?, clipLabel?, start, end, headline }
+                                                 start/end in seconds; the two URLs cite a
+                                                 public transcript page and recording
 participants  [ { name, avatar? } ]              order sets colour; speakerIndex points here
 turns         [ [speakerIndex, seconds, wordCount] ]
 topics        [ { label, segs:[[from,to,speakerIndex]], state, substantive, quote, who, ts } ]
