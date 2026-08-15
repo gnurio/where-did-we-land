@@ -11,6 +11,16 @@ double-clicking, mail it, drop it in a repo. The only capability the skill needs
 → ~/Downloads/product-sync-ledger.html
 ```
 
+## See one
+
+[![The Heat diner scene, read as a ledger](docs/assets/heat.png)](https://gnurio.github.io/where-did-we-land/heat.html)
+
+Two live examples, both unedited output: **[the diner scene from Heat
+(1995)](https://gnurio.github.io/where-did-we-land/heat.html)** — two men who intend to kill each
+other split the airtime 55/45 and settle four threads out of eight — and **[an invented pricing
+sync](https://gnurio.github.io/where-did-we-land/example.html)**, which splits 75/25 and is what an
+ordinary work meeting looks like by comparison.
+
 ## Install
 
 **One command, any agent:**
@@ -136,4 +146,11 @@ Fonts with a system-grotesque fallback — the page renders correctly offline, j
 All text colours are checked against the 4.5:1 floor on white. If you swap the palette, re-check:
 the design-system muted grey `#868A97` measures 3.44:1 and fails, which is why the text step is
 `#626673`.
+
+## Get in touch
+
+A transcript format it mangles, or a meeting it read wrong, is the most useful thing you can send.
+[Open an issue](https://github.com/gnurio/where-did-we-land/issues) — six of the open ones are
+blocked on a real export file from a tool nobody has handed over yet, so an anonymised sample from
+Zoom, Teams, Meet or Granola unblocks one outright. Otherwise: [github.com/gnurio](https://github.com/gnurio).
 

@@ -98,8 +98,8 @@ Copy `template.html`, replace the whole `<script type="application/json" id="con
 Schema:
 
 ```
-meta          { title, kind, source, start, end, headline }   start/end in seconds
-participants  [ { name } ]                       order sets colour; speakerIndex points here
+meta          { title, kind, source, sourceUrl?, start, end, headline }   start/end in seconds
+participants  [ { name, avatar? } ]              order sets colour; speakerIndex points here
 turns         [ [speakerIndex, seconds, wordCount] ]
 topics        [ { label, segs:[[from,to,speakerIndex]], state, substantive, quote, who, ts } ]
 openLoops     [ { at, question, instead } ]
@@ -111,6 +111,10 @@ commitmentsNote / openLoopsNote                  one line each, shown under the 
 ```
 
 `meta.headline` is three sentences at most: the findings that would surprise someone who sat in the room.
+
+`participants[].avatar` is optional and off unless the user asks for it: a `data:image/…` URI or an
+`https://` URL, rendered as a small circle beside the name. Never go looking for a photograph of a
+real meeting participant — a name is not consent to put someone's face on a shareable page.
 
 Abbreviated, to fix the shape:
 
