@@ -15,11 +15,10 @@ double-clicking, mail it, drop it in a repo. The only capability the skill needs
 
 [![The Heat diner scene, read as a ledger](docs/assets/heat.png)](https://gnurio.github.io/where-did-we-land/heat.html)
 
-Two live examples, both unedited output: **[the diner scene from Heat
-(1995)](https://gnurio.github.io/where-did-we-land/heat.html)** — two men who intend to kill each
-other split the airtime 55/45 and settle four threads out of eight — and **[an invented pricing
-sync](https://gnurio.github.io/where-did-we-land/example.html)**, which splits 75/25 and is what an
-ordinary work meeting looks like by comparison.
+A live page, unedited output: **[the diner scene from Heat
+(1995)](https://gnurio.github.io/where-did-we-land/heat.html)**. Two men who intend to kill each
+other split the airtime 55/45 across thirteen turns each and settle four threads out of eight — the
+best-balanced and least conclusive conversation you will ever watch.
 
 ## Install
 
