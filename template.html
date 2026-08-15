@@ -1,0 +1,410 @@
+<title>Where did we land?</title>
+
+<script type="application/json" id="convo">
+{ "REPLACE_THIS": "Paste the extracted conversation JSON here. Schema: SKILL.md step 5 of the where-did-we-land skill." }
+</script>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500&family=Inter:wght@400;500;600&display=swap');
+
+:root{
+  --bg:#FFFFFF;
+  --tint:#F8FAFC;
+  --panel:#F3F3F4;
+  --ink:#000000;
+  --ink2:#0D162F;
+  /* #868A97 from the design file measures 3.44:1 on white — below the 4.5:1 body floor.
+     Text uses the darker step; the original stays for non-text marks. */
+  --muted:#626673;
+  --muted-mark:#868A97;
+  --line:#E6E7EA;
+  --indigo:#6056FF;
+  --indigo-deep:#3B32F9;
+  --teal:#0E9384;        /* fills */
+  --teal-text:#0B7A6E;   /* 5.22:1 on white */
+  --ink-dark:#1A192B;
+  --ease:cubic-bezier(.22,1,.36,1);
+
+  --display: Sora, "Sora", -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --text: Inter, "Inter", -apple-system, "Helvetica Neue", Arial, sans-serif;
+}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+/* the hero wash bleeds past the viewport by design; clip it rather than scroll */
+html,body{overflow-x:clip}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font:400 16px/1.6 var(--text);
+  -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+}
+.wrap{max-width:1180px;margin:0 auto;padding:0 32px}
+
+/* ── hero ───────────────────────────────────────────── */
+.hero{position:relative;padding:72px 0 0}
+.hero::before{
+  content:"";position:absolute;left:-140px;right:-140px;top:-160px;height:520px;
+  pointer-events:none;opacity:.22;z-index:-1;
+  -webkit-mask-image:linear-gradient(#000 55%,transparent 100%);
+          mask-image:linear-gradient(#000 55%,transparent 100%);
+  background:
+    radial-gradient(90% 80% at 12% 0%,   rgba(138,105,255,.55) 0%, rgba(138,105,255,0) 62%),
+    radial-gradient(85% 75% at 92% 10%,  rgba(109,74,255,.55) 0%,  rgba(109,74,255,0) 62%),
+    radial-gradient(85% 85% at 82% 100%, rgba(138,105,255,.5) 0%,  rgba(138,105,255,0) 60%),
+    radial-gradient(80% 70% at 22% 100%, rgba(199,207,255,.6) 0%,  rgba(199,207,255,0) 65%);
+}
+.hero > *{position:relative}
+.eyebrow{
+  font:400 14px/1.5 var(--text);color:var(--muted);
+  display:flex;gap:12px;flex-wrap:wrap;align-items:baseline
+}
+.eyebrow span::after{content:"·";margin-left:12px;color:var(--muted-mark)}
+.eyebrow span:last-child::after{content:""}
+h1{
+  font:400 clamp(34px,5vw,48px)/1.14 var(--display);
+  letter-spacing:-.035em;color:var(--ink);margin:18px 0 0;max-width:16ch;text-wrap:balance
+}
+.lede-hero{font:400 18px/1.6 var(--text);color:var(--ink2);max-width:62ch;margin:20px 0 0;
+  text-wrap:pretty}
+.key{display:flex;gap:24px;flex-wrap:wrap;margin:28px 0 0;
+  font:500 13px/1.4 var(--text);letter-spacing:.04em;color:var(--ink2)}
+.key i{display:inline-block;width:22px;height:6px;border-radius:9999px;margin-right:9px;vertical-align:1px}
+
+/* ── stat band (rules, not cards) ───────────────────── */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  margin:56px 0 0;border-top:1px solid var(--line);background:var(--bg)}
+.stat{padding:24px 28px 26px;border-left:1px solid var(--line);min-width:0}
+.stat:first-child{border-left:none;padding-left:0}
+.stat .k{font:400 14px/1.4 var(--text);color:var(--muted)}
+.stat .v{font:400 40px/1.1 var(--display);letter-spacing:-.035em;color:var(--ink);
+  margin:10px 0 6px;font-variant-numeric:tabular-nums}
+.stat .n{font:400 13px/1.5 var(--text);color:var(--ink2);text-wrap:pretty}
+
+/* ── sections ───────────────────────────────────────── */
+section{margin-top:76px;padding-top:36px;border-top:1px solid var(--line)}
+h2{margin:0;font:400 23px/1.3 var(--display);letter-spacing:-.025em;color:var(--ink);
+  text-wrap:balance;max-width:34ch}
+.lede{font:400 15px/1.65 var(--text);color:var(--ink2);max-width:72ch;margin:14px 0 0;
+  text-wrap:pretty}
+
+.plot{margin-top:28px;overflow-x:auto}
+svg{display:block;width:100%;height:auto;min-width:820px}
+.rowlab{font:400 12px var(--text);fill:var(--ink2)}
+.rowid{font:400 11px var(--text);fill:var(--muted);letter-spacing:.06em}
+.tick{font:400 11px var(--text);fill:var(--muted)}
+.grid{stroke:var(--line);stroke-width:1}
+.rule{stroke:var(--line);stroke-width:1}
+.axis{stroke:var(--line);stroke-width:1}
+.seg{shape-rendering:crispEdges;transition:opacity .15s var(--ease)}
+svg:hover .seg{opacity:.45}
+svg .seg:hover{opacity:1}
+.tag{font:400 12px var(--text)}
+.f-ok{fill:var(--teal-text)} .f-warn{fill:var(--muted)} .f-bad{fill:var(--ink)}
+
+/* ── tables (hairlines only) ────────────────────────── */
+.tbl{margin-top:24px;overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:720px}
+th{
+  text-align:left;font:500 11px/1.4 var(--text);letter-spacing:.16em;text-transform:uppercase;
+  color:var(--muted);padding:0 24px 12px 0;border-bottom:1px solid var(--line);white-space:nowrap
+}
+th:last-child{padding-right:0}
+td{padding:18px 24px 18px 0;border-bottom:1px solid var(--line);vertical-align:top;
+  font:400 14px/1.55 var(--text);color:var(--ink2);text-wrap:pretty}
+td:last-child{padding-right:0}
+tr:last-child td{border-bottom:none}
+tbody tr{transition:background-color .15s var(--ease)}
+tbody tr:hover{background:var(--tint)}
+.tnum{font-variant-numeric:tabular-nums;color:var(--muted);white-space:nowrap;font-size:13px}
+.rid{color:var(--muted);white-space:nowrap;font-size:12px}
+.hd{color:var(--ink);font-weight:500}
+q{quotes:'“' '”';display:block;color:var(--ink2)}
+.attr{display:block;margin-top:6px;font:400 13px/1.4 var(--text);color:var(--muted)}
+.tg{white-space:nowrap;font:400 13px/1.4 var(--text)}
+.tg .dot{margin-right:8px}
+.tg.ok{color:var(--teal-text)} .tg.warn{color:var(--muted)} .tg.bad{color:var(--ink)}
+
+/* ── airtime ────────────────────────────────────────── */
+.share{display:flex;height:8px;border-radius:9999px;overflow:hidden;margin:14px 0 0;gap:2px}
+.share div{height:100%}
+.sharekey{display:flex;gap:32px;flex-wrap:wrap;
+  font:400 13px/1.4 var(--text);color:var(--ink2);margin:32px 0 0}
+.plotcap{font:400 12px/1.4 var(--text);color:var(--muted);margin:24px 0 0}
+.nowrap{white-space:nowrap}
+.sharekey b{font-weight:500;color:var(--ink)}
+
+/* ── trust ──────────────────────────────────────────── */
+.trust{margin-top:22px;max-width:74ch}
+.trust .hdl{font-weight:600;color:var(--ink)}
+.trust p{margin:0;font:400 15px/1.65 var(--text);color:var(--ink2);text-wrap:pretty}
+.trust ul{margin:22px 0 0;padding:0;list-style:none}
+.trust li{padding:16px 0 16px 24px;border-top:1px solid var(--line);position:relative;
+  font:400 14px/1.6 var(--text);color:var(--ink2);text-wrap:pretty}
+.trust li::before{content:"";position:absolute;left:0;top:25px;width:11px;height:1px;
+  background:var(--muted-mark)}
+.trust li b{color:var(--ink);font-weight:500}
+
+footer{margin-top:76px;padding:22px 0 64px;border-top:1px solid var(--line);
+  display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;
+  font:400 13px/1.4 var(--text);color:var(--muted)}
+.err{color:#B3261E;padding:24px 0;font:500 15px var(--text)}
+
+/* horizontally scrollable regions are keyboard-reachable */
+.plot:focus-visible,.tbl:focus-visible{outline:2px solid var(--indigo);outline-offset:3px}
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{transition-duration:.01ms !important;animation-duration:.01ms !important}
+  svg:hover .seg{opacity:1}
+}
+</style>
+
+<div class="wrap" id="root"></div>
+
+<script>
+(function(){
+  var root = document.getElementById('root');
+  var SVGNS = 'http://www.w3.org/2000/svg';
+
+  /* Every value from the JSON reaches the page as a text node or an attribute,
+     never as parsed markup — a transcript cannot inject HTML. */
+  function el(tag, cls, txt, parent){
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (txt !== undefined && txt !== null) e.textContent = String(txt);
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+  function sv(tag, attrs, parent){
+    var e = document.createElementNS(SVGNS, tag);
+    for (var k in attrs) e.setAttribute(k, attrs[k]);
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+  function fail(msg){ el('div','err', msg, root); }
+
+  var D;
+  try { D = JSON.parse(document.getElementById('convo').textContent); }
+  catch(e){ return fail('Bad JSON in the #convo block: ' + e.message); }
+  if (!D || D.REPLACE_THIS) return fail('Template not filled in — replace the #convo JSON block.');
+
+  /* state → [label, tone, glyph] */
+  var STATE = {
+    decided:['Decided','ok','●'], agreed:['Agreed','ok','●'],
+    action:['Action owned','ok','●'], closed:['Closed','ok','●'],
+    open:['Open','warn','○'], partial:['Half-decided','warn','◐'],
+    ambiguous:['No explicit answer','warn','◐'],
+    unanswered:['No reply','bad','✕'], dropped:['Dropped','bad','✕']
+  };
+  var st_of = function(k){ return STATE[k] || ['Unclassified','warn','○']; };
+  var mmss = function(s){ return Math.floor(s/60) + ':' + String(s%60).padStart(2,'0'); };
+  var pad2 = function(n){ return String(n).padStart(2,'0'); };
+  // turn[2] is the spoken text (counted here) or a pre-counted number.
+  var wc = function(v){
+    return typeof v === 'number' ? v : String(v).trim().split(/\s+/).filter(Boolean).length;
+  };
+  // Speakers: indigo, then deep ink — the design system's flow-diagram treatment.
+  var RAMP = ['var(--indigo)','var(--ink-dark)','var(--teal)','var(--muted)',
+              'var(--indigo-deep)','#5B6170','#9C99B8','#C7CFFF'];
+  var scol = function(i){ return RAMP[i % RAMP.length]; };
+
+  var P = D.participants, T0 = D.meta.start, T1 = D.meta.end, SPAN = T1 - T0;
+
+  /* ---------- derived stats ---------- */
+  var stat = P.map(function(p){ return {name:p.name, turns:0, words:0}; });
+  D.turns.forEach(function(t){
+    if (t[0] < 0 || t[0] >= P.length) return;
+    stat[t[0]].turns += 1; stat[t[0]].words += wc(t[2]);
+  });
+  var totW = stat.reduce(function(a,s){ return a + s.words; }, 0) || 1;
+  stat.forEach(function(s){ s.pct = Math.round(100*s.words/totW); });
+
+  var subst = D.topics.filter(function(t){ return t.substantive; });
+  var tone  = function(t){ return st_of(t.state)[1]; };
+  var nOk   = subst.filter(function(t){ return tone(t)==='ok';   }).length;
+  var nWarn = subst.filter(function(t){ return tone(t)==='warn'; }).length;
+  var nBad  = subst.filter(function(t){ return tone(t)==='bad';  }).length;
+
+  /* ---------- geometry ---------- */
+  var W=1120, LBL=330, PADR=190, PLOT=W-LBL-PADR, ROW=30, BAR=8;
+  var X = function(t){ return LBL + (t-T0)/SPAN*PLOT; };
+  var STEP = SPAN > 2400 ? 300 : 180;
+  var firstTick = Math.ceil(T0/STEP)*STEP;
+
+  function section(title, lede){
+    var s = el('section', null, null, root);
+    el('h2', null, title, s);
+    if (lede) el('p','lede', lede, s);
+    return s;
+  }
+  function scroller(cls, parent, label){
+    var d = el('div', cls, null, parent);
+    d.tabIndex = 0; d.setAttribute('role','region'); d.setAttribute('aria-label', label);
+    return d;
+  }
+  // cells: string | {cls,text} | {q,attr} | {tag:{label,tone,glyph}}
+  function table(parent, label, cols, rows){
+    var box = scroller('tbl', parent, label);
+    var t = el('table', null, null, box);
+    var hr = el('tr', null, null, el('thead', null, null, t));
+    cols.forEach(function(c){ el('th', null, c, hr); });
+    var tb = el('tbody', null, null, t);
+    rows.forEach(function(cells){
+      var tr = el('tr', null, null, tb);
+      cells.forEach(function(c){
+        if (c === null || typeof c !== 'object'){ el('td', null, c === null ? '' : c, tr); return; }
+        var td = el('td', c.cls || null, null, tr);
+        if (c.q !== undefined){
+          el('q', null, c.q, td);
+          if (c.attr) el('span','attr', c.attr, td);
+        } else if (c.tag){
+          var sp = el('span', 'tg ' + c.tag.tone, null, td);
+          el('span','dot', c.tag.glyph, sp);
+          sp.appendChild(document.createTextNode(c.tag.label));
+        } else {
+          td.textContent = c.text === undefined ? '' : String(c.text);
+        }
+      });
+    });
+  }
+
+  /* ---------- hero ---------- */
+  var hero = el('div','hero', null, root);
+  var eb = el('div','eyebrow', null, hero);
+  el('span', null, D.meta.kind || 'Conversation record', eb);
+  el('span', null, mmss(T0) + '–' + mmss(T1) + ', ' + Math.round(SPAN/60) + ' minutes', eb);
+  el('span', null, D.meta.source || '', eb);
+  el('h1', null, D.meta.title, hero);
+  el('p','lede-hero', D.meta.headline, hero);
+  var key = el('div','key', null, hero);
+  P.forEach(function(p,i){
+    var k = el('span', null, null, key);
+    el('i', null, null, k).style.background = scol(i);
+    k.appendChild(document.createTextNode(p.name));
+  });
+
+  var stats = el('div','stats', null, root);
+  function stile(k, v, n){
+    var d = el('div','stat', null, stats);
+    el('div','k', k, d); el('div','v', v, d); el('div','n', n, d);
+  }
+  stile('Threads landed', nOk + '/' + subst.length,
+        nWarn + ' open · ' + nBad + ' dropped or unanswered');
+  stile('Talk share', stat.map(function(s){ return s.pct; }).join(' / '),
+        stat.map(function(s){ return s.turns + ' turns'; }).join(' · '));
+  stile('Commitments', String(D.commitments.length), D.commitmentsNote || '');
+  stile('Open loops', String(D.openLoops.length), D.openLoopsNote || '');
+
+  /* ---------- 01 timeline ---------- */
+  var s1sec = section('Topic timeline', D.notes.timeline);
+  var plot = scroller('plot', s1sec, 'Topic occupancy over time');
+  var H = ROW*D.topics.length + 44;
+  var s1 = sv('svg', {viewBox:'0 0 '+W+' '+H, role:'img',
+                      'aria-label':'Topic occupancy over time'}, plot);
+  for (var t = firstTick; t < T1; t += STEP){
+    sv('line', {'class':'grid', x1:X(t).toFixed(1), x2:X(t).toFixed(1),
+                y1:8, y2:18+ROW*D.topics.length}, s1);
+    sv('text', {'class':'tick', x:X(t).toFixed(1), y:34+ROW*D.topics.length,
+                'text-anchor':'middle'}, s1).textContent = mmss(t);
+  }
+  D.topics.forEach(function(tp, i){
+    var y = 18 + i*ROW, cy = y + BAR/2;
+    sv('text', {'class':'rowid', x:0, y:y+BAR+1}, s1).textContent = 'T'+pad2(i+1);
+    sv('text', {'class':'rowlab', x:44, y:y+BAR+1}, s1).textContent =
+      tp.label.length > 40 ? tp.label.slice(0,39) + '…' : tp.label;
+    sv('line', {'class':'rule', x1:LBL, x2:LBL+PLOT, y1:cy, y2:cy}, s1);
+    tp.segs.forEach(function(s){
+      var w = Math.max(3, X(s[1]) - X(s[0]));
+      var r = sv('rect', {'class':'seg', fill:scol(s[2]), x:X(s[0]).toFixed(1), y:y,
+                          width:w.toFixed(1), height:BAR}, s1);
+      sv('title', {}, r).textContent =
+        tp.label + ' — ' + mmss(s[0]) + '–' + mmss(s[1]) + ', ' + P[s[2]].name;
+    });
+    var stt = st_of(tp.state);
+    var g = sv('text', {'class':'tag f-'+stt[1], x:LBL+PLOT+18, y:y+BAR+1}, s1);
+    g.textContent = stt[2] + '  ' + stt[0];
+  });
+  sv('line', {'class':'axis', x1:LBL, x2:LBL+PLOT,
+              y1:14+ROW*D.topics.length, y2:14+ROW*D.topics.length}, s1);
+
+  /* ---------- 02 ledger ---------- */
+  var s2 = section('Ledger — every thread, with its receipt', D.notes.ledger);
+  table(s2, 'Thread ledger', ['','Raised','Thread','State','Evidence'], D.topics.map(function(tp,i){
+    var stt = st_of(tp.state);
+    return [
+      {cls:'rid',  text:'T'+pad2(i+1)},
+      {cls:'tnum', text:mmss(tp.segs[0][0])},
+      {cls:'hd',   text:tp.label},
+      {tag:{label:stt[0], tone:stt[1], glyph:stt[2]}},
+      {q:tp.quote, attr:tp.who + ', ' + tp.ts}
+    ];
+  }));
+
+  /* ---------- 03 open loops ---------- */
+  var s3 = section('Open loops — raised, never closed', D.notes.openLoops);
+  table(s3, 'Open loops', ['At','The question','What happened instead'], D.openLoops.map(function(o){
+    return [{cls:'tnum', text:o.at}, {cls:'hd', text:o.question}, o.instead];
+  }));
+
+  /* ---------- 04 commitments ---------- */
+  var s4 = section('Commitments', D.notes.commitments);
+  table(s4, 'Commitments', ['Owner','Commitment','At','Firmness'], D.commitments.map(function(c){
+    return [{cls:'hd', text:c.owner}, c.what, {cls:'tnum', text:c.at}, c.firmness];
+  }));
+
+  /* ---------- 05 stances ---------- */
+  var s5 = section('Stances — who agreed with whom', D.notes.stances);
+  table(s5, 'Stances', ['At','Direction','What','How it was taken'], D.stances.map(function(s){
+    return [{cls:'tnum', text:s.at}, {cls:'hd nowrap', text:s.from + ' → ' + s.to}, s.what, s.note];
+  }));
+
+  /* ---------- 06 airtime ---------- */
+  var s6sec = section('Airtime', D.notes.airtime);
+  var sk = el('div','sharekey', null, s6sec);
+  stat.forEach(function(s){
+    var w = el('span', null, null, sk);
+    el('b', null, s.name, w);
+    w.appendChild(document.createTextNode(' — ' + s.pct + '%, ' +
+      s.words.toLocaleString() + ' words, ' + s.turns + ' turns'));
+  });
+  var share = el('div','share', null, s6sec);
+  stat.forEach(function(s,i){
+    var d = el('div', null, null, share);
+    d.style.background = scol(i); d.style.flex = String(s.words);
+  });
+  el('p','plotcap','Words per speaking turn', s6sec);
+  var plot6 = scroller('plot', s6sec, 'Words per speaking turn over time');
+  var TH = 128, maxw = Math.max.apply(null, D.turns.map(function(t){ return wc(t[2]); })) || 1;
+  var X2 = function(t){ return (t-T0)/SPAN*W; };   // full-width; own axis, not the timeline's
+  var s6 = sv('svg', {viewBox:'0 0 '+W+' '+TH, role:'img',
+                      'aria-label':'Words per speaking turn over time'}, plot6);
+  for (var t6 = firstTick; t6 < T1; t6 += STEP){
+    sv('line', {'class':'grid', x1:X2(t6).toFixed(1), x2:X2(t6).toFixed(1), y1:4, y2:TH-26}, s6);
+    sv('text', {'class':'tick', x:X2(t6).toFixed(1), y:TH-6, 'text-anchor':'middle'}, s6)
+      .textContent = mmss(t6);
+  }
+  D.turns.forEach(function(t7){
+    if (t7[0] < 0 || t7[0] >= P.length) return;
+    var n = wc(t7[2]), h = Math.max(1.5, n/maxw*(TH-44));
+    var r = sv('rect', {'class':'seg', fill:scol(t7[0]), x:(X2(t7[1])-2).toFixed(1),
+                        y:(TH-26-h).toFixed(1), width:4, height:h.toFixed(1)}, s6);
+    sv('title', {}, r).textContent = P[t7[0]].name + ' at ' + mmss(t7[1]) + ' — ' + n + ' words';
+  });
+  sv('line', {'class':'axis', x1:0, x2:W, y1:TH-26, y2:TH-26}, s6);
+
+  /* ---------- 07 trust ---------- */
+  var s7 = section('How much of this to trust');
+  var tr = el('div','trust', null, s7);
+  var p = el('p', null, null, tr);
+  el('span','hdl','Counts are measured; states are inferred. ', p);
+  p.appendChild(document.createTextNode(
+    'Turns, timings and word counts come straight from the transcript. Every value in the state ' +
+    'column is a judgment made by reading the quote beside it — check the quote before acting on it.'));
+  var ul = el('ul', null, null, tr);
+  D.caveats.forEach(function(c){ el('li', null, c, ul); });
+
+  var f = el('footer', null, null, root);
+  el('span', null, D.meta.title, f);
+  el('span', null, D.turns.length + ' turns · ' + totW.toLocaleString() +
+                   ' words · ' + D.topics.length + ' threads', f);
+})();
+</script>

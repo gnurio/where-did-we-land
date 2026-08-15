@@ -1,0 +1,9 @@
+# Generated ledgers hold real meeting content — never commit one.
+*-ledger.html
+*.vtt
+*.srt
+transcript*.txt
+
+.DS_Store
+__pycache__/
+*.pyc
