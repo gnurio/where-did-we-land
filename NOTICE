@@ -1,0 +1,47 @@
+where-did-we-land
+Copyright (c) 2026 George Nurijanian
+
+The MIT licence in LICENSE covers the work in this repository:
+
+  skills/where-did-we-land/   the skill, its template, reference docs and script
+  evals/                      the trigger and behaviour scenarios
+  docs/index.html             the site's own markup
+  docs/heat-noir.css          the per-page skin
+  README.md, NOTICE, LICENSE
+
+It does not cover the material listed below, which is included as critical
+commentary and is not relicensed. Copying this repository does not give you
+permission to reuse it.
+
+
+Heat (1995) — © Warner Bros. Entertainment Inc.
+
+  docs/assets/heat-ledger.mp4         74 seconds of the diner scene, picture and
+                                      audio, under an original analytical overlay
+  docs/assets/heat-video-poster.jpg   one frame of the above
+  docs/assets/heat.png                a screenshot of docs/heat.html, which shows
+                                      two frames from the scene
+  docs/heat.html                      two frames embedded as participant avatars,
+                                      and eight quoted lines of dialogue (91 words)
+
+  The scene transcript is credited to Scraps from the Loft:
+  https://scrapsfromtheloft.com/movies/heat-restaurant-scene-de-niro-al-pacino-transcript/
+
+  Frames and audio are taken from a publicly posted clip:
+  https://www.youtube.com/watch?v=LUy2Wx_r0_w
+
+  No claim is made to any of it. The analysis, layout, code and prose around it
+  are the author's and are MIT licensed.
+
+
+Fonts
+
+  Sora, Inter, Cinzel and Archivo Narrow are loaded from Google Fonts at runtime
+  and are not distributed here. Each is under the SIL Open Font License 1.1.
+
+
+Heat Noir palette
+
+  docs/heat-noir.css encodes colour values and type choices from a design system
+  derived from two Japanese theatrical posters for the film. Colour values and
+  token names carry no copyright; the posters themselves are not reproduced.

@@ -151,10 +151,17 @@ All text colours are checked against the 4.5:1 floor on white. If you swap the p
 the design-system muted grey `#868A97` measures 3.44:1 and fails, which is why the text step is
 `#626673`.
 
-## Get in touch
+## About
 
-A transcript format it mangles, or a meeting it read wrong, is the most useful thing you can send.
-[Open an issue](https://github.com/gnurio/where-did-we-land/issues) — six of the open ones are
-blocked on a real export file from a tool nobody has handed over yet, so an anonymised sample from
-Zoom, Teams, Meet or Granola unblocks one outright. Otherwise: [github.com/gnurio](https://github.com/gnurio).
+Built by George Nurijanian. More product management writing and tools at
+[prodmgmt.world](https://prodmgmt.world).
+
+## Licence
+
+MIT, in [LICENSE](LICENSE).
+
+One carve-out, set out in [NOTICE](NOTICE): the Heat example on the hosted site quotes eight lines
+of dialogue and uses a short clip and two frames from the film as critical commentary. That material
+is Warner Bros.' and is not relicensed. Everything in `skills/`, `evals/` and the site's own markup
+is MIT and yours to take.
 
