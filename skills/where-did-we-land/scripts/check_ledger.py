@@ -146,6 +146,80 @@ def check_geometry(d, r):
         r.ok("timeline geometry and speaker indices are sound")
 
 
+_UNITS = {
+    "two": 2, "three": 3, "four": 4, "five": 5, "six": 6, "seven": 7,
+    "eight": 8, "nine": 9, "ten": 10, "eleven": 11, "twelve": 12,
+    "thirteen": 13, "fourteen": 14, "fifteen": 15, "sixteen": 16,
+    "seventeen": 17, "eighteen": 18, "nineteen": 19,
+}
+_TENS = {
+    "twenty": 20, "thirty": 30, "forty": 40, "fifty": 50,
+    "sixty": 60, "seventy": 70, "eighty": 80, "ninety": 90,
+}
+# "one" is left out on purpose: it is far commoner as an article than as a count,
+# and flagging it would cost more false alarms than it is worth.
+
+
+def _numbers_in(text):
+    """Every quantity a reader would see in this sentence, digits or words."""
+    found = {int(n) for n in re.findall(r"\d+", text)}
+    words = re.split(r"[^a-z]+", text.lower())
+    for i, w in enumerate(words):
+        if w in _UNITS:
+            # "twenty-three" reads as 23, not as 20 and 3
+            if i and words[i - 1] in _TENS:
+                continue
+            found.add(_UNITS[w])
+        elif w in _TENS:
+            nxt = words[i + 1] if i + 1 < len(words) else ""
+            found.add(_TENS[w] + _UNITS.get(nxt, 0))
+    return found
+
+
+def check_headline_news(d, r):
+    """The stat band carries the score; the headline has to carry something else."""
+    headline = d["meta"].get("headline", "")
+    if not headline.strip():
+        r.bad("meta.headline is empty — the page opens on nothing")
+        return
+
+    subst = [t for t in d["topics"] if t.get("substantive")] or d["topics"]
+    landed = sum(1 for t in subst if t.get("state") in STATES - UNRESOLVED - {"open", "partial"})
+    words = {}
+    turns = {}
+    for t in d["turns"]:
+        words[t[0]] = words.get(t[0], 0) + t[2]
+        turns[t[0]] = turns.get(t[0], 0) + 1
+    total = sum(words.values()) or 1
+
+    shown = {
+        round((d["meta"]["end"] - d["meta"]["start"]) / 60): "the duration in the eyebrow",
+        len(subst): "the thread count in Threads landed",
+        landed: "the landed count in Threads landed",
+        len(d["commitments"]): "the Commitments tile",
+        len(d["openLoops"]): "the Open loops tile",
+        len(d["turns"]): "the turn total in the footer",
+    }
+    for i, w in words.items():
+        shown[round(100 * w / total)] = "a Talk share percentage"
+        shown[turns[i]] = "a turn count under Talk share"
+
+    clash = sorted(n for n in _numbers_in(headline) if n in shown and n > 1)
+    if clash:
+        for n in clash[:3]:
+            r.bad(f"headline repeats {n}, already on screen as {shown[n]}")
+        r.note("the headline's job is what the tiles cannot show — read across rows instead")
+    else:
+        r.ok("headline carries no number the stat band already shows")
+
+    # Printed, not asserted: prose claims are not machine-checkable, but a wrong
+    # count is the commonest way this page lies, so put the true ones in reach.
+    loops = [f"T{i + 1:02d} ({t.get('state')})"
+             for i, t in enumerate(d["topics"]) if len(t["segs"]) > 1]
+    r.note(f"threads raised more than once: {len(loops)}"
+           + (f" — {', '.join(loops)}" if loops else ""))
+
+
 def _norm(s):
     """Fold smart quotes and whitespace so a receipt matches its source line."""
     s = unicodedata.normalize("NFKC", s)
@@ -188,6 +262,7 @@ def main():
     check_receipts(d, r)
     check_open_loops(d, r)
     check_geometry(d, r)
+    check_headline_news(d, r)
 
     if len(sys.argv) > 2:
         check_quotes_verbatim(d, sys.argv[2], r)

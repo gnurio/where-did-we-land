@@ -134,7 +134,8 @@ python3 skills/where-did-we-land/scripts/check_ledger.py out-ledger.html [transc
 
 Asserts that no transcript leaked, that the turn count is plausible for the duration (an unmerged VTT
 fails loudly here), that every thread carries a state and a receipt, that every unresolved thread
-reached the open-loops table, and that the timeline geometry is sane. Pass the source transcript too
+reached the open-loops table, that the timeline geometry is sane, and that the headline does not
+just repeat a number the stat band already shows. Pass the source transcript too
 and it also confirms every quote appears verbatim — the one check that catches an invented receipt.
 
 Exits non-zero on failure.

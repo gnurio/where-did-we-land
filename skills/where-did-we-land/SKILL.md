@@ -91,7 +91,37 @@ Where the transcript will not support a firmer state, `ambiguous` is the honest 
 
 **Done when** every thread stated `unanswered`, `dropped` or `ambiguous` appears in `openLoops`.
 
-### 5. Write the page
+### 5. Write the news
+
+The stat band carries the score — duration, threads landed, talk share, turns, commitments, open loops. All of it is on screen before a word of prose is read. The prose carries the **news**: what someone who read every row knows that the tiles cannot show.
+
+News comes from reading *across* rows, never off one of them:
+
+- a subject raised, abandoned and raised again — and whether it ever closed
+- which kind of subject lands, and which kind stays open
+- who opens threads and who closes them
+- the thread that held the floor longest, and where it ended
+- a register that came back empty, or one person holding every commitment
+
+Give each sentence a **receipt** of its own: the rows you read it from. A sentence you cannot point at rows for is an impression, and impressions do not ship — the same bar the states are held to.
+
+**Report what this conversation did.** *"Neither man closes a thread he returns to"* is a finding, checkable against the table in ten seconds. *"The most evenly balanced conversation you are likely to watch"* ranks every conversation ever held on the strength of one measurement.
+
+**Let numbers earn their place.** A number the tiles already display costs a second reading and returns nothing. Numbers the tiles cannot compute are news: how many threads were returned to, how many of those closed, how many commitments sit with one person.
+
+Where the prose goes:
+
+| field | carries |
+|---|---|
+| `meta.headline` | the news, three sentences at most |
+| `notes.*` | one line per section — what the reader is looking at, then what it shows *here* |
+| `commitmentsNote` / `openLoopsNote` | one line each, under the stat band |
+
+Recount every quantity as you write it. *"It happens twice here"* is wrong the moment a third thread has two segments, and a wrong count on a page whose whole claim is measurement costs more than a dull sentence would have.
+
+**Done when** every sentence in `headline` and `notes` names rows you can point at, every count in them has been recounted against the JSON, and no number in `headline` repeats one the stat band already shows.
+
+### 6. Write the page
 
 Copy `template.html`, replace the whole `<script type="application/json" id="convo">` block with your JSON, and write it beside the transcript as `<meeting-name>-ledger.html`. Change nothing else in the template.
 
@@ -112,8 +142,6 @@ caveats       [ "..." ]
 commitmentsNote / openLoopsNote                  one line each, shown under the stat band
 ```
 
-`meta.headline` is three sentences at most: the findings that would surprise someone who sat in the room.
-
 `participants[].avatar` is optional and off unless the user asks for it: a `data:image/…` URI or an
 `https://` URL, rendered as a small circle beside the name. Never go looking for a photograph of a
 real meeting participant — a name is not consent to put someone's face on a shareable page.
@@ -124,7 +152,7 @@ Abbreviated, to fix the shape:
 {
   "meta": {"title":"Where did we land?","kind":"Weekly sync","source":"Zoom .vtt",
            "start":0,"end":1380,
-           "headline":"Twenty-three minutes, nine threads, three of them closed."},
+           "headline":"Pricing came back at the end and is open for the third week running. The one question anyone asked outright got answered with a different question."},
   "participants": [{"name":"Dana Whitfield"},{"name":"Amir Haddad"}],
   "turns": [[0,0,14],[1,22,61],[0,95,8]],
   "topics": [{"label":"Pricing tiers","segs":[[0,240,0],[900,1020,1]],
@@ -136,7 +164,8 @@ Abbreviated, to fix the shape:
   "commitments": [{"owner":"Amir","what":"Draft the tier comparison","at":"16:40","firmness":"Firm"}],
   "stances": [{"at":"11:05","from":"Amir","to":"Dana","what":"Ship the annual plan first",
                "note":"Dana agreed without pushback."}],
-  "notes": {"timeline":"…","ledger":"…","openLoops":"…","commitments":"…","stances":"…","airtime":"…"},
+  "notes": {"timeline":"One row per thread. Two bars mean the subject was left and came back — it happens once here, on the thread nobody closes.",
+            "ledger":"…","openLoops":"…","commitments":"…","stances":"…","airtime":"…"},
   "commitmentsNote":"Both are Amir's", "openLoopsNote":"Two are pricing questions",
   "caveats": ["Word counts computed with awk; turn splits left as Zoom emitted them."]
 }
@@ -144,6 +173,6 @@ Abbreviated, to fix the shape:
 
 **Done when** the file exists on disk, opens with no error panel and bars in the topic timeline, and `scripts/check_ledger.py` on it exits 0.
 
-### 6. Report
+### 7. Report
 
 Give the user the file path, then lead with the number that answers *where did we land*, then the open loops. The ledger is already on the page — do not restate it in chat.
