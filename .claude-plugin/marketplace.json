@@ -1,0 +1,14 @@
+{
+  "name": "where-did-we-land",
+  "owner": {
+    "name": "gnurio"
+  },
+  "plugins": [
+    {
+      "name": "where-did-we-land",
+      "source": "./",
+      "description": "Point it at a meeting transcript and get one self-contained HTML page: a topic timeline showing loop-backs, a ledger of where every thread landed with the quote that proves it, open loops, commitments, stances and airtime.",
+      "homepage": "https://github.com/gnurio/where-did-we-land"
+    }
+  ]
+}

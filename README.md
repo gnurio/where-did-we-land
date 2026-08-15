@@ -13,17 +13,35 @@ double-clicking, mail it, drop it in a repo. The only capability the skill needs
 
 ## Install
 
+**One command, any agent:**
+
 ```bash
-git clone https://github.com/gnurio/where-did-we-land.git \
-  ~/.claude/skills/where-did-we-land
+npx skills add gnurio/where-did-we-land
 ```
 
-| Harness | Where to put this folder |
-|---|---|
-| Claude Code | `~/.claude/skills/where-did-we-land/` (global) or `.claude/skills/…` (per project) |
-| Cursor | `.cursor/rules/` — or keep it anywhere and say "follow SKILL.md in ./where-did-we-land" |
-| Cowork | upload the folder; reference `SKILL.md` in the prompt |
-| Codex | keep it in the repo; point at `SKILL.md` from `AGENTS.md` or the prompt |
+**Claude Code** — as a plugin:
+
+```
+/plugin marketplace add gnurio/where-did-we-land
+/plugin install where-did-we-land
+```
+
+**Manually**, in any harness. The skill folder is self-contained — `SKILL.md`, its `reference/` and
+its `scripts/` travel together — so copying it is a complete install:
+
+```bash
+git clone https://github.com/gnurio/where-did-we-land.git /tmp/wdwl
+cp -R /tmp/wdwl/skills/where-did-we-land <target-below>
+```
+
+| Harness | Personal | Project |
+|---|---|---|
+| Claude Code | `~/.claude/skills/` | `.claude/skills/` |
+| Cursor | `~/.cursor/skills/` | `.cursor/skills/` |
+| Codex CLI | `~/.agents/skills/` | `.agents/skills/` |
+| Copilot (VS Code) | `~/.copilot/skills/` | `.github/skills/` — also reads `.claude/skills/` and `.agents/skills/` |
+
+Cowork: upload the `skills/where-did-we-land/` folder and reference `SKILL.md` in the prompt.
 
 ## Getting a transcript in
 
@@ -37,12 +55,12 @@ Run it with no argument and it goes looking.
 | 4 | **MCP adapters** — Granola meetings, Google Drive for Meet transcript Docs, Gmail for notetaker recap emails | that MCP |
 | 5 | **Ask** — labels what it already checked | — |
 
-`reference/sources.md` contains the filename patterns, which links require authentication (Zoom share links and
+`skills/where-did-we-land/reference/sources.md` contains the filename patterns, which links require authentication (Zoom share links and
 SharePoint are — ask for the `.vtt`), and the exact MCP searches.
 
 ### Formats it accepts
 
-All the meeting tools use one of five shapes. `reference/formats.md`
+All the meeting tools use one of five shapes. `skills/where-did-we-land/reference/formats.md`
 contains the detection and normalisation rules.
 
 | Shape | Looks like | From |
@@ -88,17 +106,17 @@ This matters if you wish to share the generated artifact with others.
 
 ## Files
 
-- `SKILL.md` — the procedure
-- `template.html` — the page; renders from the JSON block at its top
-- `reference/formats.md` — the five transcript shapes, and the merge rule
-- `reference/sources.md` — the acquisition ladder
-- `scripts/check_ledger.py` — structural checks on any generated ledger
-- `evals/` — trigger and behaviour scenarios
+- `skills/where-did-we-land/SKILL.md` — the procedure
+- `skills/where-did-we-land/template.html` — the page; renders from the JSON block at its top
+- `skills/where-did-we-land/reference/formats.md` — the five transcript shapes, and the merge rule
+- `skills/where-did-we-land/reference/sources.md` — the acquisition ladder
+- `skills/where-did-we-land/scripts/check_ledger.py` — structural checks on any generated ledger
+- `evals/` — trigger and behaviour scenarios (maintainers; not needed to use the skill)
 
 ## Checking a ledger
 
 ```bash
-python3 scripts/check_ledger.py out-ledger.html [transcript.txt]
+python3 skills/where-did-we-land/scripts/check_ledger.py out-ledger.html [transcript.txt]
 ```
 
 Asserts that no transcript leaked, that the turn count is plausible for the duration (an unmerged VTT
@@ -110,7 +128,7 @@ Exits non-zero on failure.
 
 ## Editing the look
 
-Colour lives in the `:root` custom properties at the top of `template.html`. Speakers draw from
+Colour lives in the `:root` custom properties at the top of `skills/where-did-we-land/template.html`. Speakers draw from
 `--indigo` then `--ink-dark`; `--teal-text` marks landed threads, `--muted` open, `--ink` dropped.
 Light mode only, by design. Type is Sora for display and Inter for everything else, loaded from Google
 Fonts with a system-grotesque fallback — the page renders correctly offline, just without Sora.

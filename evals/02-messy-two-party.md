@@ -107,7 +107,7 @@ The transcript is in Otter's speaker-header shape — the one format verified ag
 **Acquisition and structure**
 
 - [ ] Writes `./pricing-sync-ledger.html`; the page opens with no error panel and draws bars
-- [ ] `scripts/check_ledger.py ./pricing-sync-ledger.html` exits 0
+- [ ] `skills/where-did-we-land/scripts/check_ledger.py ./pricing-sync-ledger.html` exits 0
 - [ ] `turns[n][2]` are integers — no transcript text embedded
 - [ ] Turn count is around 30, not 100+
 
