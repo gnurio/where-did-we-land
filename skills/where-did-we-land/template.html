@@ -291,7 +291,8 @@ footer{margin-top:76px;padding:22px 0 64px;border-top:1px solid var(--line);
   /* ---------- hero ---------- */
   var hero = el('div','hero', null, root);
   var eb = el('div','eyebrow', null, hero);
-  el('span', null, D.meta.kind || 'Conversation record', eb);
+  var kind = D.meta.kind || 'Conversation record';
+  el('span', null, kind, eb);
   el('span', null, mmss(T0) + '–' + mmss(T1) + ', ' + Math.round(SPAN/60) + ' minutes', eb);
   /* meta.sourceUrl / meta.clipUrl are optional: when the transcript or the
      recording came from a public page, cite it rather than describe it. */
@@ -321,7 +322,7 @@ footer{margin-top:76px;padding:22px 0 64px;border-top:1px solid var(--line);
     var dp = D.meta.date.split('-');
     titleParts.push(MONTHS[parseInt(dp[1], 10) - 1] + ' ' + parseInt(dp[2], 10));
   }
-  titleParts.push(D.meta.kind || 'Conversation record');
+  titleParts.push(kind);
   document.title = titleParts.join(' | ');
 
   el('h1', null, D.meta.title, hero);
