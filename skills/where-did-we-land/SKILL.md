@@ -126,9 +126,14 @@ Copy `template.html` and replace the whole `<script type="application/json" id="
 Schema:
 
 ```
-meta          { title, kind, source, sourceUrl?, clipUrl?, clipLabel?, start, end, headline }
+meta          { title, kind, source, date?, sourceUrl?, clipUrl?, clipLabel?, start, end, headline }
                                                  start/end in seconds; the two URLs cite a
-                                                 public transcript page and recording
+                                                 public transcript page and recording; date is
+                                                 an ISO string ("2026-08-21"), set only when a
+                                                 date is visible in the transcript's own content
+                                                 (header or preamble) — never from the source
+                                                 filename, file modification time, or by asking
+                                                 the user. Leave it out when no such date exists.
 participants  [ { name, avatar? } ]              order sets colour; speakerIndex points here
 turns         [ [speakerIndex, seconds, wordCount] ]
 topics        [ { label, segs:[[from,to,speakerIndex]], state, substantive, quote, who, ts } ]
@@ -149,7 +154,7 @@ Abbreviated, to fix the shape:
 ```json
 {
   "meta": {"title":"Where did we land?","kind":"Weekly sync","source":"Zoom .vtt",
-           "start":0,"end":1380,
+           "date":"2026-08-21","start":0,"end":1380,
            "headline":"Pricing came back at the end and is open for the third week running. The one question anyone asked outright got answered with a different question."},
   "participants": [{"name":"Dana Whitfield"},{"name":"Amir Haddad"}],
   "turns": [[0,0,14],[1,22,61],[0,95,8]],
@@ -172,5 +177,17 @@ Abbreviated, to fix the shape:
 **Done when** the file exists on disk, opens with no error panel and bars in the topic timeline, and `scripts/check_ledger.py` on it exits 0.
 
 ### 7. Report
+
+Once step 6's Done-when bar is met, open the page in the system's default browser before reporting anything, where a shell is available:
+
+```bash
+case "$(uname)" in
+  Darwin) open "$page" ;;
+  Linux)  xdg-open "$page" ;;
+  *)      cmd /c start "" "$page" ;;
+esac
+```
+
+If the command fails (no display, headless session) or no shell exists at all (Cowork), skip it and move straight to the report below — no error, no extra message.
 
 Give the user the file path, then lead with the number that answers _where did we land_, then the open loops. The ledger is already on the page. Do not restate it in chat.
