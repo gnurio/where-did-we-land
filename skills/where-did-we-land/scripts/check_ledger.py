@@ -13,6 +13,7 @@ import json
 import re
 import sys
 import unicodedata
+from datetime import date
 
 STATES = {
     "decided", "agreed", "action", "closed", "open",
@@ -176,6 +177,20 @@ def _numbers_in(text):
     return found
 
 
+def check_meta_date(d, r):
+    """meta.date, if present, must be a valid ISO date — it feeds the page <title>."""
+    meta_date = d["meta"].get("date")
+    if not meta_date:
+        r.note("meta.date not set — the tab title drops the date segment")
+        return
+    try:
+        date.fromisoformat(meta_date)
+    except (ValueError, TypeError):
+        r.bad(f"meta.date ({meta_date!r}) is not a valid ISO date (\"YYYY-MM-DD\")")
+    else:
+        r.ok(f"meta.date ({meta_date}) parses as ISO date")
+
+
 def check_headline_news(d, r):
     """The stat band carries the score; the headline has to carry something else."""
     headline = d["meta"].get("headline", "")
@@ -262,6 +277,7 @@ def main():
     check_receipts(d, r)
     check_open_loops(d, r)
     check_geometry(d, r)
+    check_meta_date(d, r)
     check_headline_news(d, r)
 
     if len(sys.argv) > 2:
