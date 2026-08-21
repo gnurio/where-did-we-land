@@ -291,7 +291,8 @@ footer{margin-top:76px;padding:22px 0 64px;border-top:1px solid var(--line);
   /* ---------- hero ---------- */
   var hero = el('div','hero', null, root);
   var eb = el('div','eyebrow', null, hero);
-  el('span', null, D.meta.kind || 'Conversation record', eb);
+  var kind = D.meta.kind || 'Conversation record';
+  el('span', null, kind, eb);
   el('span', null, mmss(T0) + '–' + mmss(T1) + ', ' + Math.round(SPAN/60) + ' minutes', eb);
   /* meta.sourceUrl / meta.clipUrl are optional: when the transcript or the
      recording came from a public page, cite it rather than describe it. */
@@ -306,6 +307,26 @@ footer{margin-top:76px;padding:22px 0 64px;border-top:1px solid var(--line);
   }
   cite(D.meta.source, D.meta.sourceUrl);
   if (D.meta.clipUrl) cite(D.meta.clipLabel || 'Watch the clip', D.meta.clipUrl);
+
+  /* Browser tab title: names | date | topic. Independent of the on-page heading
+     below, which always reads meta.title/meta.headline unchanged. meta.date is
+     a plain "YYYY-MM-DD" string parsed by splitting, never via `new Date(...)`
+     — that path reads a date-only ISO string as UTC midnight and renders the
+     previous day in any timezone behind UTC. */
+  var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var firstNames = P.map(function(p){ return p.name.split(' ')[0]; });
+  var titleParts = [];
+  if (firstNames.length){
+    titleParts.push(firstNames.length <= 3 ? firstNames.join(' & ')
+      : firstNames[0] + ' + ' + (firstNames.length - 1) + ' others');
+  }
+  if (D.meta.date){
+    var dp = D.meta.date.split('-');
+    titleParts.push(MONTHS[parseInt(dp[1], 10) - 1] + ' ' + parseInt(dp[2], 10));
+  }
+  titleParts.push(kind);
+  document.title = titleParts.join(' | ');
+
   el('h1', null, D.meta.title, hero);
   el('p','lede-hero', D.meta.headline, hero);
   var key = el('div','key', null, hero);
