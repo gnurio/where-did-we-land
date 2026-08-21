@@ -315,9 +315,11 @@ footer{margin-top:76px;padding:22px 0 64px;border-top:1px solid var(--line);
      previous day in any timezone behind UTC. */
   var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   var firstNames = P.map(function(p){ return p.name.split(' ')[0]; });
-  var titleParts = [
-    firstNames.length <= 3 ? firstNames.join(' & ') : firstNames[0] + ' + ' + (firstNames.length - 1) + ' others'
-  ];
+  var titleParts = [];
+  if (firstNames.length){
+    titleParts.push(firstNames.length <= 3 ? firstNames.join(' & ')
+      : firstNames[0] + ' + ' + (firstNames.length - 1) + ' others');
+  }
   if (D.meta.date){
     var dp = D.meta.date.split('-');
     titleParts.push(MONTHS[parseInt(dp[1], 10) - 1] + ' ' + parseInt(dp[2], 10));

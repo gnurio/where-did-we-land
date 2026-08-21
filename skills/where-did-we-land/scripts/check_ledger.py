@@ -178,15 +178,20 @@ def _numbers_in(text):
 
 
 def check_meta_date(d, r):
-    """meta.date, if present, must be a valid ISO date — it feeds the page <title>."""
+    """meta.date, if present, must be "YYYY-MM-DD" — template.html parses it by
+    splitting on "-", which is stricter than date.fromisoformat() alone (that
+    also accepts compact "20260821" and ISO week dates, which split() cannot)."""
     meta_date = d["meta"].get("date")
     if not meta_date:
         r.note("meta.date not set — the tab title drops the date segment")
         return
+    if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", meta_date):
+        r.bad(f"meta.date ({meta_date!r}) is not \"YYYY-MM-DD\"")
+        return
     try:
         date.fromisoformat(meta_date)
-    except (ValueError, TypeError):
-        r.bad(f"meta.date ({meta_date!r}) is not a valid ISO date (\"YYYY-MM-DD\")")
+    except ValueError:
+        r.bad(f"meta.date ({meta_date!r}) is not a valid calendar date")
     else:
         r.ok(f"meta.date ({meta_date}) parses as ISO date")
 

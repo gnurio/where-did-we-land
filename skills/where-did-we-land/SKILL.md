@@ -130,10 +130,10 @@ meta          { title, kind, source, date?, sourceUrl?, clipUrl?, clipLabel?, st
                                                  start/end in seconds; the two URLs cite a
                                                  public transcript page and recording; date is
                                                  an ISO string ("2026-08-21"), set only when a
-                                                 date is visible in the transcript's own content
-                                                 (header or preamble) — never from the source
-                                                 filename, file modification time, or by asking
-                                                 the user. Leave it out when no such date exists.
+                                                 date is visible anywhere in the transcript's own
+                                                 content — never from the source filename, file
+                                                 modification time, or by asking the user. Leave
+                                                 it out when no such date exists.
 participants  [ { name, avatar? } ]              order sets colour; speakerIndex points here
 turns         [ [speakerIndex, seconds, wordCount] ]
 topics        [ { label, segs:[[from,to,speakerIndex]], state, substantive, quote, who, ts } ]
@@ -178,13 +178,13 @@ Abbreviated, to fix the shape:
 
 ### 7. Report
 
-Once step 6's Done-when bar is met, open the page in the system's default browser before reporting anything, where a shell is available:
+Once step 6's Done-when bar is met, open the page in the system's default browser before reporting anything, where a shell is available. Set `page` to the file path you just wrote, then run:
 
 ```bash
 case "$(uname)" in
-  Darwin) open "$page" ;;
-  Linux)  xdg-open "$page" ;;
-  *)      cmd /c start "" "$page" ;;
+  Darwin) open "$page" >/dev/null 2>&1 ;;
+  Linux)  xdg-open "$page" >/dev/null 2>&1 ;;
+  *)      cmd /c start "" "$page" >/dev/null 2>&1 ;;
 esac
 ```
 
